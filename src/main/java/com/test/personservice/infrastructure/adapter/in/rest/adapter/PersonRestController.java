@@ -2,6 +2,7 @@ package com.test.personservice.infrastructure.adapter.in.rest.adapter;
 
 import com.test.personservice.domain.model.Person;
 import com.test.personservice.domain.port.in.CreatePersonUseCase;
+import com.test.personservice.domain.port.in.DeletePersonUseCase;
 import com.test.personservice.domain.port.in.FindPersonUseCase;
 import com.test.personservice.domain.port.in.UpdatePersonUseCase;
 import com.test.personservice.infrastructure.adapter.in.rest.dto.PersonRequestDto;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +32,16 @@ public class PersonRestController {
   private final FindPersonUseCase findPersonUseCase;
   private final CreatePersonUseCase createPersonUseCase;
   private final UpdatePersonUseCase updatePersonUseCase;
+  private final DeletePersonUseCase deletePersonUseCase;
   private final PersonRestMapper mapper;
 
   public PersonRestController(FindPersonUseCase findPersonUseCase,
       CreatePersonUseCase createPersonUseCase, UpdatePersonUseCase updatePersonUseCase,
-      PersonRestMapper mapper) {
+      DeletePersonUseCase deletePersonUseCase, PersonRestMapper mapper) {
     this.findPersonUseCase = findPersonUseCase;
     this.createPersonUseCase = createPersonUseCase;
     this.updatePersonUseCase = updatePersonUseCase;
+    this.deletePersonUseCase = deletePersonUseCase;
     this.mapper = mapper;
   }
 
@@ -72,6 +76,12 @@ public class PersonRestController {
   public Mono<ResponseEntity<Void>> update(@PathVariable UUID id,
       @RequestBody @Valid PersonRequestDto personRequestDto) {
     return this.updatePersonUseCase.update(id, this.mapper.toDomain(personRequestDto))
+        .then(Mono.just(ResponseEntity.noContent().build()));
+  }
+
+  @DeleteMapping("/{id}")
+  public Mono<ResponseEntity<Void>> delete(@PathVariable UUID id) {
+    return this.deletePersonUseCase.delete(id)
         .then(Mono.just(ResponseEntity.noContent().build()));
   }
 

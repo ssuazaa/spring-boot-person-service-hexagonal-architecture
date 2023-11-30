@@ -1,4 +1,4 @@
-package com.test.personservice.infrastructure.adapter.out.mongodb.entity;
+package com.test.personservice.infrastructure.adapter.out.persistance.mongodb.entity;
 
 import java.util.UUID;
 import org.springframework.data.annotation.Version;

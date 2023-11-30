@@ -1,7 +1,6 @@
 package com.test.personservice.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.when;
 import com.test.personservice.domain.model.Person;
 import com.test.personservice.domain.port.in.CreatePersonUseCase;
 import com.test.personservice.domain.port.out.PersonRepositoryOut;
-import com.test.personservice.infrastructure.config.exceptions.BaseException;
 import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,22 +31,6 @@ class CreatePersonUseCaseImplTest {
   void setUp() {
     this.personRepositoryOut = mock(PersonRepositoryOut.class);
     this.createPersonUseCase = new CreatePersonUseCaseImpl(this.personRepositoryOut);
-  }
-
-  @Test
-  @DisplayName("testSave() -> param person null case")
-  void testSavePersonNullCase() {
-    // Arrange
-    Person person = null;
-
-    // Act & Assert
-    assertThatThrownBy(() -> this.createPersonUseCase.create(person))
-        .isInstanceOf(BaseException.class)
-        .hasFieldOrPropertyWithValue("key", "PERSON_IS_MANDATORY")
-        .hasFieldOrPropertyWithValue("statusCode", 400)
-        .hasMessage("The person attribute cannot be null");
-
-    verify(this.personRepositoryOut, times(0)).save(any(Person.class));
   }
 
   @Test

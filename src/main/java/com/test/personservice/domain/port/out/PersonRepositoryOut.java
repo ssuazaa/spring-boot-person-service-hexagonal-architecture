@@ -13,4 +13,6 @@ public interface PersonRepositoryOut {
 
   Mono<Person> save(Person person);
 
+  Mono<Void> deleteById(UUID id);
+
 }
